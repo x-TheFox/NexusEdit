@@ -21,6 +21,29 @@ pub fn transform(op1: Operation, op2: Operation) -> Operation {
                 Operation::Insert { pos: p1, ch: c1 }
             }
         },
-        (op1, _) => op1 // Simplified for basic case
+        (Operation::Insert { pos: p1, ch: c1 }, Operation::Delete { pos: p2 }) => {
+            if p1 > p2 {
+                Operation::Insert { pos: p1 - 1, ch: c1 }
+            } else {
+                Operation::Insert { pos: p1, ch: c1 }
+            }
+        },
+        (Operation::Delete { pos: p1 }, Operation::Insert { pos: p2, ch: _ }) => {
+            if p1 >= p2 {
+                Operation::Delete { pos: p1 + 1 }
+            } else {
+                Operation::Delete { pos: p1 }
+            }
+        },
+        (Operation::Delete { pos: p1 }, Operation::Delete { pos: p2 }) => {
+            if p1 > p2 {
+                Operation::Delete { pos: p1 - 1 }
+            } else if p1 == p2 {
+                Operation::Retain { count: 0 }
+            } else {
+                Operation::Delete { pos: p1 }
+            }
+        },
+        (op1, _) => op1
     }
 }
