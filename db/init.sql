@@ -2,6 +2,7 @@ CREATE TABLE documents (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(255) NOT NULL,
     current_version INT NOT NULL DEFAULT 0,
+    content JSONB,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
